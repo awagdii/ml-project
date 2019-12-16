@@ -1,7 +1,7 @@
 import pandas as pd
-
-from flask import Flask, request, render_template
-
+from predict import *
+from flask import Flask, request, render_template,jsonify
+import keras
 app = Flask(__name__)
 
 
@@ -19,11 +19,11 @@ def check():
 def upldfile():
     if request.method == 'POST':
         file_val = request.files['file']
-        print(file_val);
+        print(file_val)
     columns = ['user', 'activity', 'timestamp', 'x-axis', 'y-axis', 'z-axis']
-    df = pd.read_csv(file_val, header=None, names=columns);
-    print(df)
-    return "success";
+    df = readData(file_val)
+    keras.backend.clear_session()
+    return predict(df)
 
 
 if __name__ == '__main__':
